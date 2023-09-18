@@ -1,4 +1,4 @@
-package lk.ijse.dep11.demo11.controller;
+package lk.ijse.dep11.demo11.mt;
 
 import java.io.Serializable;
 
@@ -60,5 +60,10 @@ public class CartItem implements Serializable {
     public void changeQTY(int qty){
         this.qty = this.qty+qty;
         this.total = this.qty*this.price;
+    }
+
+    public  void changeQTYandPrice(int qty, double price){
+        this.qty = qty;
+        this.total = this.qty*price;
     }
 }

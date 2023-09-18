@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="rootEditCartItem" prefHeight="238.0" prefWidth="349.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep11.demo11.controller.EditCartItemSceneController">
+   <children>
+      <HBox layoutY="74.0" prefHeight="100.0" prefWidth="349.0">
+         <children>
+            <VBox alignment="CENTER_RIGHT" prefHeight="131.0" prefWidth="123.0" spacing="26.0">
+               <children>
+                  <Label text="Code :  ">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label text="QTY :  ">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label text="Selling Price :  ">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" prefHeight="297.0" prefWidth="199.0" spacing="20.0">
+               <children>
+                  <TextField fx:id="txtBarCode" editable="false" />
+                  <TextField fx:id="txtQTY" />
+                  <TextField fx:id="txtSellingPrice" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <Label alignment="CENTER" layoutX="157.0" layoutY="34.0" text="Edit Cart Item" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnApply" layoutX="253.0" layoutY="200.0" mnemonicParsing="false" onAction="#btnApplyOnAction" prefHeight="24.0" prefWidth="67.0" text="Apply" />
+      <Button fx:id="btnCancel" layoutX="171.0" layoutY="200.0" mnemonicParsing="false" onAction="#btnCancelOnAction" prefHeight="24.0" prefWidth="67.0" text="Cancel" />
+   </children>
+</AnchorPane>
