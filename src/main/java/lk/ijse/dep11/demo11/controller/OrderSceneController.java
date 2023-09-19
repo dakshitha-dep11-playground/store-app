@@ -45,8 +45,8 @@ public class OrderSceneController {
 
     public Item selectedItem;
 
-    public double total;
-    public double profit;
+    private double total;
+    private double profit;
 
     public ArrayList<PreviousOrders> previousOrderList = new ArrayList<>();
 
@@ -55,12 +55,12 @@ public class OrderSceneController {
     public static CartItem editingCartItem;
 
     public void initialize(){
-
-        {bntEdit2 = bntEdit;
-            root2 = root;
-            tblCart2 = tblCart;}
-
-
+//
+////        {bntEdit2 = bntEdit;
+////            root2 = root;
+////            tblCart2 = tblCart;}
+//
+//
         total = 0;
         profit =0;
         btnAdd.setDisable(true);
@@ -107,7 +107,7 @@ public class OrderSceneController {
     }
 
     public void btnAddOnAction(ActionEvent actionEvent) {
-        CartItem addToCartItem = new CartItem(selectedItem.getBarCode(), selectedItem.getDescription(), txtQTY.getValue(), selectedItem.getSellingPrice());
+        CartItem addToCartItem = new CartItem(selectedItem.getBarCode(), selectedItem.getDescription(), txtQTY.getValue(), selectedItem.getSellingPrice(), selectedItem.getBuyingPrice(), selectedItem.getStock());
         for (CartItem cartItem :
                 cartList) {
             if(cartItem.getBarCode().equals(addToCartItem.getBarCode())){
@@ -122,6 +122,8 @@ public class OrderSceneController {
             }
         }
 
+
+        //IN here set up remaining stocks and add details to table, then set total and profit
         setTotalProfit(txtQTY.getValue(), selectedItem.getSellingPrice(), selectedItem.getBuyingPrice());
         cartList.add(addToCartItem);
         selectedItem.setStock(selectedItem.getStock()-txtQTY.getValue());
@@ -133,7 +135,7 @@ public class OrderSceneController {
     public void txtCodeSetOnAction(ActionEvent actionEvent) {
         String inoutCode = txtCode.getText().strip();
 
-        //Part that I have added to clear the existing txt fields when txt coe is blank
+        //code to clear the existing txt fields when txt coe is blank
         if(inoutCode.isBlank()){
             txtDescription.clear();
             txtStock.clear();
@@ -153,6 +155,14 @@ public class OrderSceneController {
                 txtBuyPrice.setText(item.getBuyingPrice()+"");
                 txtSellprice.setText(item.getSellingPrice()+"");
                 txtQTY.requestFocus();
+
+                if(item.getStock()<0){
+                    new Alert(Alert.AlertType.ERROR,"Error in stocks, please update the stocks").show();
+                    if(item.getStock()==0){
+                        txtCode.selectAll();
+                        txtCode.requestFocus();
+                    }
+                }
 
                 txtQTY.setDisable(item.getStock()==0);
                 btnAdd.setDisable(txtQTY.isDisable());
@@ -219,8 +229,8 @@ public class OrderSceneController {
     }
 
     public void bntEditSetOnAction(ActionEvent actionEvent) throws IOException {
-        editingCartItem = new CartItem(selectedItem.getBarCode(), selectedItem.getDescription(), selectedCartItem.getQty(), selectedItem.getSellingPrice());
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/EditCartItemScene.fxml"));
+        editingCartItem = new CartItem(selectedItem.getBarCode(), selectedItem.getDescription(), selectedCartItem.getQty(), selectedItem.getSellingPrice(), selectedItem.getBuyingPrice(), selectedItem.getStock());
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/TestEditCartItemScene.fxml"));
 
         Stage editCartItemStage = new Stage();
         editCartItemStage.setScene(new Scene(fxmlLoader.load()));
@@ -240,9 +250,14 @@ public class OrderSceneController {
 
         editCartItemStage.setOnCloseRequest(e -> {
             int getCatIndex = cartList.indexOf(selectedCartItem);
+
+            // total profit and total should be updated within here using a new method
+
+            updateEditedCartList(getCatIndex, editingCartItem);
+
             cartList.remove(selectedCartItem);
             cartList.add(getCatIndex,editingCartItem);
-
+    // Editing cart item is a static variable, replace this with response Object.
 
             tblCart.refresh();
             tblCart.refresh();
@@ -251,6 +266,17 @@ public class OrderSceneController {
         });
         editCartItemStage.show();
         tblCart.refresh();
+
+    }
+
+    private void updateEditedCartList(int getCatIndex, CartItem editingCartItem) {
+        double newTotal;
+        double newProfit;
+        int newStock;
+
+        //code here to edit total, may be negative or positive
+
+        //newTotal = editingCartItem.get
 
     }
 

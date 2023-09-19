@@ -1,7 +1,9 @@
 package lk.ijse.dep11.demo11.controller;
 
 import javafx.event.ActionEvent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 
 import javafx.scene.layout.AnchorPane;
@@ -31,11 +33,21 @@ public class EditCartItemSceneController {
         txtSellingPrice.setText(String.valueOf(editingCartItem.getPrice()));
         //:Todo add spinner to txtQTy
 
-        txtQTY.onInputMethodTextChangedProperty().addListener(e->{
-            if(editingCartItem.getQty() == Integer.valueOf(txtQTY.getText())){
-            btnApply.setDisable(false);
-            //: Todo this apply button disable code is not working properly
-        }
+        txtQTY.textProperty().addListener(e->{
+//            if(editingCartItem.getQty() == Integer.valueOf(txtQTY.getText())){
+//            btnApply.setDisable(false);
+//            //: Todo this apply button disable code is not working properly
+//        }
+            System.out.println("hi hi hi");
+            try{
+                if(editingCartItem.getStock() + editingCartItem.getQty() < Integer.valueOf(txtQTY.getText())||Integer.valueOf(txtQTY.getText())<=0){
+                    btnApply.setDisable(true);
+                }else {
+                    btnApply.setDisable(false);
+                }
+            }catch(Exception ex){
+
+            }
 
         });
 
@@ -52,6 +64,20 @@ public class EditCartItemSceneController {
 
         int qty = Integer.valueOf(txtQTY.getText());
         double sellingPrice = Double.valueOf(txtSellingPrice.getText());
+
+        if(sellingPrice < editingCartItem.getBuyingPrice()){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Selling price <  Buying price, Do you  want to continue?", ButtonType.YES, ButtonType.NO);
+            alert.show();
+            if(alert.showAndWait().get()==ButtonType.NO){
+                txtSellingPrice.selectAll();
+                txtSellingPrice.requestFocus();
+                return;
+            }
+
+
+        }
+
+
 
         editingCartItem.changeQTYandPrice(qty,sellingPrice);
 

@@ -9,12 +9,18 @@ public class CartItem implements Serializable {
     private double price;
     private double total;
 
-    public CartItem(String barCode, String description, int qty, double price) {
+    private double buyingPrice;
+
+    private int stock;
+
+    public CartItem(String barCode, String description, int qty, double price , double buyingPrice, int stock) {
         this.barCode = barCode;
         this.description = description;
         this.qty = qty;
         this.price = price;
         this.total = price*qty;
+        this.buyingPrice = buyingPrice;
+        this.stock = stock;
     }
 
     public String getBarCode() {
@@ -64,6 +70,23 @@ public class CartItem implements Serializable {
 
     public  void changeQTYandPrice(int qty, double price){
         this.qty = qty;
+        this.price = price;
         this.total = this.qty*price;
+    }
+
+    public double getBuyingPrice() {
+        return buyingPrice;
+    }
+
+    public void setBuyingPrice(double buyingPrice) {
+        this.buyingPrice = buyingPrice;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 }
