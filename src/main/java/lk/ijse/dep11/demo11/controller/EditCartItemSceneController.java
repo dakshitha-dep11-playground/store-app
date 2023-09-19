@@ -24,7 +24,7 @@ public class EditCartItemSceneController {
     int qty;
     public void initialize(){
 
-        btnApply.setDisable(true);
+        btnApply.setDisable(false);
 
         editingCartItem = OrderSceneController.editingCartItem;
 
@@ -76,9 +76,6 @@ public class EditCartItemSceneController {
 
 
         }
-
-
-
         editingCartItem.changeQTYandPrice(qty,sellingPrice);
 
         System.out.println(editingCartItem.getTotal());

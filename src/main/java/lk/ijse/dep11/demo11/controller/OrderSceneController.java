@@ -55,6 +55,7 @@ public class OrderSceneController {
     public static CartItem editingCartItem;
 
     public void initialize(){
+        bntEdit.setDisable(true);
 //
 ////        {bntEdit2 = bntEdit;
 ////            root2 = root;
@@ -77,18 +78,25 @@ public class OrderSceneController {
         itemList.add(item2);
 
         txtQTY.valueProperty().addListener(e->{
-            int stock = selectedItem.getStock();
-            btnAdd.setDisable((txtQTY.getValue()>stock));
+            try{
+                int stock = selectedItem.getStock();
+                btnAdd.setDisable((txtQTY.getValue()>stock));
+            }catch (Exception ex){
+                // :Todo : do something here to stop the error when repressed complete order
+            }
         });
 
         tblCart.getSelectionModel().selectedIndexProperty().addListener(e->{
             //System.out.println(e);
+
             int selectedIndex = tblCart.getSelectionModel().getSelectedIndex();
             if(selectedIndex>=0){
                 bntEdit.setDisable(false);
                 selectedCartItem = cartList.get(selectedIndex);
                 System.out.println(selectedCartItem);
                 System.out.println(selectedCartItem.getBarCode());
+                System.out.println("Selected" + selectedItem)  ;
+
             }
         });
 
@@ -210,8 +218,12 @@ public class OrderSceneController {
     }
 
     public void btnCompleteOrderSetOnAction(ActionEvent actionEvent) {
-        PreviousOrders previousOrders = new PreviousOrders(cartList,total,profit);
-        previousOrderList.add(previousOrders);
+
+        if(tblCart.getItems().size()==0){
+            return;
+        }
+        PreviousOrders currentOrder = new PreviousOrders(cartList,total,profit);
+        previousOrderList.add(currentOrder);
 
 
         cartList.clear();
@@ -229,7 +241,10 @@ public class OrderSceneController {
     }
 
     public void bntEditSetOnAction(ActionEvent actionEvent) throws IOException {
-        editingCartItem = new CartItem(selectedItem.getBarCode(), selectedItem.getDescription(), selectedCartItem.getQty(), selectedItem.getSellingPrice(), selectedItem.getBuyingPrice(), selectedItem.getStock());
+        System.out.println(selectedCartItem);
+        editingCartItem = new CartItem(selectedItem.getBarCode(), selectedItem.getDescription(), selectedCartItem.getQty(), selectedCartItem.getPrice(), selectedItem.getBuyingPrice(), selectedItem.getStock());
+
+
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/TestEditCartItemScene.fxml"));
 
         Stage editCartItemStage = new Stage();
@@ -250,8 +265,18 @@ public class OrderSceneController {
 
         editCartItemStage.setOnCloseRequest(e -> {
             int getCatIndex = cartList.indexOf(selectedCartItem);
+            CartItem removingCartItem = cartList.get(getCatIndex);
+
 
             // total profit and total should be updated within here using a new method
+            double newTotal = editingCartItem.getTotal() - cartList.get(getCatIndex).getTotal();
+            double newProfit = (editingCartItem.getQty()*(editingCartItem.getPrice()-editingCartItem.getBuyingPrice())) - (removingCartItem.getQty()*(removingCartItem.getPrice()- removingCartItem.getBuyingPrice()));
+
+
+            total += newTotal;
+            profit += newProfit;
+            lblProfit.setText("Order Pofit : Rs. "+String.format("%.2f",profit));
+            lblTotal.setText("Order Total : Rs. "+String.format("%.2f",total));
 
             updateEditedCartList(getCatIndex, editingCartItem);
 
@@ -266,6 +291,9 @@ public class OrderSceneController {
         });
         editCartItemStage.show();
         tblCart.refresh();
+        System.out.println(tblCart.getItems());
+        bntEdit.setDisable(true);
+        tblCart.getSelectionModel().clearSelection();
 
     }
 
